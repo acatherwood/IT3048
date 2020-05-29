@@ -121,6 +121,10 @@ Examples
 
 # Scrum Roles
 
+DevOps/Product Owner/Scrum Master: Anne Catherwood  
+Frontend Developer: Cheghali Elkhalili  
+Integration Developer: Trevor Cromwell
+
 
 # Weekly Meeting
 
