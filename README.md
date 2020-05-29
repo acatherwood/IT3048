@@ -21,6 +21,8 @@ Use your Android device to access your teams Stand-Up tracker. Upload notes or t
 
 ## Storyboard
 
+[Storyboard](https://github.com/acatherwood/IT3048/blob/master/Group_Project_Storyboard.pptx)
+
 ![FirstPage](https://user-images.githubusercontent.com/65705891/83110000-6052df00-a090-11ea-9525-fdad4cce17c6.JPG)
 
 
