@@ -106,14 +106,12 @@ Examples
 
 # Class Diagram
 
-
+https://github.com/acatherwood/IT3048/blob/master/IT3048C%20Design%20Diagram.png
 
 
 ## Class Diagram Description
 
-**MainActivity**:  
-**SpecimenDetailsActivity**:  
-**RetrofitInstance**:
+
 
 # Product Backlog
 
