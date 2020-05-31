@@ -129,8 +129,8 @@ Integration Developer: Trevor Cromwell
 
 # Weekly Meeting
 
-Date/time : Wednesday @ 8:15pm
-Meeting link:https://www.google.com/url?q=https://us04web.zoom.us/j/8029734922?pwd%3DSndIL2NmTzNIUGJUOGFERmNaaHY4Zz09&sa=D&usd=2&usg=AOvVaw2wcf6T9kl_3f3VJwI7a1tV
-Meeting number:802 973 4922
-Meeting Password: 9iiyu4
+Date/time : Wednesday @ 8:15pm  
+Meeting link:https://www.google.com/url?q=https://us04web.zoom.us/j/8029734922?pwd%3DSndIL2NmTzNIUGJUOGFERmNaaHY4Zz09&sa=D&usd=2&usg=AOvVaw2wcf6T9kl_3f3VJwI7a1tV   
+Meeting number:802 973 4922   
+Meeting Password: 9iiyu4    
 
