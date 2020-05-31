@@ -106,7 +106,7 @@ Examples
 
 # Class Diagram
 
-https://github.com/acatherwood/IT3048/blob/master/IT3048C%20Design%20Diagram.png
+![Class Diagram](https://github.com/acatherwood/IT3048/blob/master/IT3048C%20Class%20Diagram.png)
 
 ## Class Diagram Description  
 
@@ -124,7 +124,9 @@ https://github.com/acatherwood/IT3048/projects/3
 
 https://github.com/acatherwood/IT3048/projects/4
 
-# Kanban Board
+# Scrum Board
+
+Our Scrum board is located at : https://github.com/acatherwood/IT3048/projects/5
 
 # Scrum Roles
 
