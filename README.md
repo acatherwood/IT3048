@@ -108,6 +108,12 @@ Examples
 
 https://github.com/acatherwood/IT3048/blob/master/IT3048C%20Design%20Diagram.png
 
+## Class Diagram Description  
+
+###StandUp:### The main page  that includes most activities. The user can see members of each  team,   
+see standup notes, and find control list. ###Team:### Noun class that represents team members. ###Note:###   
+Noun class that represents standup notes. ###IStandUp:### Interface for Room to persists Notes data.
+
 # Product Backlog
 
 https://github.com/acatherwood/IT3048/projects/1
