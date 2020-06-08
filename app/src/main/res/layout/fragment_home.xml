@@ -61,12 +61,12 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="282dp">
 
-        <ImageButton
-            android:id="@+id/btnTake Photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_photo" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnTakePhoto"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            app:srcCompat="@drawable/ic_photo" />-->
 
         <ImageButton
             android:id="@+id/btnSave"
