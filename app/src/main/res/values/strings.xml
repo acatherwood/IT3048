@@ -9,4 +9,8 @@
 
     <string name="menu_home">Stand Up Notes</string>
     <string name="menu_gallery">Team Directory</string>
+    <string name="pickDate">Pick Day</string>
+    <string name="PickDay">PickDay</string>
+    <string name="pick_day">Pick Day</string>
+
 </resources>
