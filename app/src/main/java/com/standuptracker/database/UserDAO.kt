@@ -1,4 +1,4 @@
-package com.standuptracker
+package com.standuptracker.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -10,7 +10,7 @@ import androidx.room.Query
 interface UserDAO{
 
     @Query("SELECT * from user_table ORDER BY userID DESC")
-    fun getUsersByID(): LiveData<List<User>>
+    fun getUsersOrderedByID(): LiveData<List<User>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(user: User)
@@ -18,3 +18,4 @@ interface UserDAO{
     @Query("DELETE FROM user_table")
     suspend fun deleteAll()
 }
+

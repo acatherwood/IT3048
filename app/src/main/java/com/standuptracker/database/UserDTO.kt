@@ -1,4 +1,4 @@
-package com.standuptracker
+package com.standuptracker.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,6 +11,6 @@ class User(
     @ColumnInfo(name="last_name") val lastName: String,
     @ColumnInfo(name="email") val email: String,
     @ColumnInfo(name="address") val address: String,
-    @ColumnInfo(name="rol_id") val roleID: Int
+    @ColumnInfo(name="role_id") val roleID: Int
 
     )
