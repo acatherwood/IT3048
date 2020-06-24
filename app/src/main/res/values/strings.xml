@@ -9,4 +9,9 @@
 
     <string name="menu_home">Stand Up Notes</string>
     <string name="menu_gallery">Team Directory</string>
-</resources>
+    <string name="btnSave">Save</string>
+    <string name="enterDate">Enter Date</string>
+        <string name="todo">TODO</string>
+    <string name="searchDate">Search by Date</string>
+    <string name="search">Search</string>
+    </resources>
