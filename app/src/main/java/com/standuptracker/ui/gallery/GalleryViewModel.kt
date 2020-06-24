@@ -17,9 +17,7 @@ class GalleryViewModel : ViewModel() {
 
     fun fetchPeople(){
         //read json response into countries variable
-        println("hi from fetchPeople() in view model " + people)
         people = personService.fetchPeople()
-        println ("hi")
     }
 
     private val _text = MutableLiveData<String>().apply {
