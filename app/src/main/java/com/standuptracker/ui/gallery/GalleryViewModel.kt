@@ -3,8 +3,24 @@ package com.standuptracker.ui.gallery
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.standuptracker.dto.Person
+import com.standuptracker.service.PersonService
 
 class GalleryViewModel : ViewModel() {
+
+    var people: MutableLiveData<ArrayList<Person>> = MutableLiveData<ArrayList<Person>>()
+    var personService: PersonService = PersonService()
+
+    init{
+        fetchPeople()
+    }
+
+    fun fetchPeople(){
+        //read json response into countries variable
+        println("hi from fetchPeople() in view model " + people)
+        people = personService.fetchPeople()
+        println ("hi")
+    }
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is gallery Fragment"

@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.standuptracker.R
+import kotlinx.android.synthetic.main.fragment_gallery.*
 
 class GalleryFragment : Fragment() {
 
@@ -27,5 +29,16 @@ class GalleryFragment : Fragment() {
             textView.text = it
         })
         return root
+    }
+
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
+        galleryViewModel.people.observe(this, Observer{
+                people -> actPerson.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, people))
+        })
+
     }
 }
