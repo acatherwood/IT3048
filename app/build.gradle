@@ -26,7 +26,17 @@ android {
             abortOnError false
         }
     }
-}
+
+    //06/23/2020 build problem: We needed the following. Thank you google and whoever wrote this page https://www.programmersought.com/article/93372451121/
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+
+
+    }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
