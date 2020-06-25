@@ -8,6 +8,6 @@ interface IPersonDAO {
 
     //todo change this!
     // set json endpoint
-    @GET("/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json")
+    @GET("/2c321e9f2b38b5d3d1ed.json")
     fun getAllPeople(): Call<ArrayList<Person>>
 }
