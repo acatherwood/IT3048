@@ -15,13 +15,13 @@ class GalleryViewModel : ViewModel() {
         fetchPeople()
     }
 
-    fun fetchPeople(){
+    private fun fetchPeople(){
         //read json response into countries variable
         people = personService.fetchPeople()
     }
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+        value = "Find a Team Member"
     }
     val text: LiveData<String> = _text
 }

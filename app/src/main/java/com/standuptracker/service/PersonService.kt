@@ -13,7 +13,6 @@ import java.lang.Exception
 class PersonService {
     fun fetchPeople() : MutableLiveData<ArrayList<Person>> {
         var _people = MutableLiveData<ArrayList<Person>>()
-        println("crashes here!")
         val service = RetrofitClientInstance.retrofitInstance?.create(IPersonDAO::class.java)
         val call = service?.getAllPeople()
         // must put call on the background thread
