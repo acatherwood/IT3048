@@ -17,8 +17,8 @@ class PersonService {
         // must put call on the background thread
         call?.enqueue(object : Callback<ArrayList<Person>> {
             override fun onFailure(call: Call<ArrayList<Person>>, t: Throwable) {
-                throw Exception("failed to read JSON")
                 Log.d("JSON", "Save Failed")
+                throw Exception("failed to read JSON")
             }
 
             override fun onResponse(
