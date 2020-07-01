@@ -9,7 +9,9 @@ data class Person(
     @SerializedName("last_name") var lastName: String,
     @SerializedName("first_name") var firstName: String
 ) {
-    //add to string override to format to read as First Name, Last Name
+    /*
+     * Sets string format to read as First Name, Last Name
+     */
     override fun toString(): String {
         return "$firstName $lastName"
     }

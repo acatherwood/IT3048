@@ -10,6 +10,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class PersonService {
+    /*
+     * Retrieves list of people from JSON endpoint
+     */
     fun fetchPeople(): MutableLiveData<ArrayList<Person>> {
         var people = MutableLiveData<ArrayList<Person>>()
         val service = RetrofitClientInstance.retrofitInstance?.create(IPersonDAO::class.java)
