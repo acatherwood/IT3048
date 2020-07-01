@@ -1,4 +1,4 @@
-# Stand-Up Tracker
+# Stand-Up Tracker [![Stand-Up Tracker CI](https://circleci.com/gh/acatherwood/IT3048.svg?style=svg)](https://app.circleci.com/pipelines/github/acatherwood/IT3048)
 
 Design Document
 
