@@ -9,5 +9,6 @@ class HomeViewModel : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
         value = "View Standup Notes By Date"
     }
+    
     val text: LiveData<String> = _text
 }
