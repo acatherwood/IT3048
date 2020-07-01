@@ -9,7 +9,7 @@ import com.standuptracker.service.PersonService
 class GalleryViewModel : ViewModel() {
 
     var people: MutableLiveData<ArrayList<Person>> = MutableLiveData<ArrayList<Person>>()
-    var personService: PersonService = PersonService()
+    private var personService: PersonService = PersonService()
 
     init {
         fetchPeople()
