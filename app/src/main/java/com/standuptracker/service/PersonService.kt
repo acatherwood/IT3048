@@ -12,7 +12,7 @@ import java.lang.Exception
 
 class PersonService {
     fun fetchPeople() : MutableLiveData<ArrayList<Person>> {
-        var _people = MutableLiveData<ArrayList<Person>>()
+        var people = MutableLiveData<ArrayList<Person>>()
         val service = RetrofitClientInstance.retrofitInstance?.create(IPersonDAO::class.java)
         val call = service?.getAllPeople()
         // must put call on the background thread
@@ -22,14 +22,12 @@ class PersonService {
                 Log.d("JSON", "Save Failed")
             }
 
-            override fun onResponse(
-                call: Call<ArrayList<Person>>,
-                response: Response<ArrayList<Person>>
-            ) {
-                _people.value = response.body()
+            override fun onResponse( call: Call<ArrayList<Person>>, response: Response<ArrayList<Person>>)
+            {
+                people.value = response.body()
             }
 
         })
-        return _people
+        return people
         }
 }
