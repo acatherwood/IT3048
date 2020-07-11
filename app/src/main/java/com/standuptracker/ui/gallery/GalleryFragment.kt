@@ -32,12 +32,17 @@ class GalleryFragment : Fragment() {
     }
 
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-        galleryViewModel.people.observe(this, Observer{
-                people -> actPerson.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, people))
+        galleryViewModel.people.observe(this, Observer { people ->
+            actPerson.setAdapter(
+                ArrayAdapter(
+                    context!!,
+                    R.layout.support_simple_spinner_dropdown_item,
+                    people
+                )
+            )
         })
 
     }
