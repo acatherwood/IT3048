@@ -20,7 +20,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val allNotes: LiveData<List<Note>>
 
     init {
-        val noteDao = NoteRoomDatabase.getDatabase(application).noteDao()
+        val noteDao = NoteRoomDatabase.getDatabase(application, viewModelScope).noteDao()
         repository = NoteRepository(noteDao)
         allNotes = repository.allNotes
     }
