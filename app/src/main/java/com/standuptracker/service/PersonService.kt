@@ -12,7 +12,7 @@ import retrofit2.Response
  * Retrieves list of people from JSON endpoint
  */
 class PersonService {
-    fun fetchPeople(): MutableLiveData<ArrayList<Person>> {
+    fun fetchPeople() : MutableLiveData<ArrayList<Person>> {
         var people = MutableLiveData<ArrayList<Person>>()
         val service = RetrofitClientInstance.retrofitInstance?.create(IPersonDAO::class.java)
         val call = service?.getAllPeople()
@@ -23,14 +23,12 @@ class PersonService {
                 throw Exception("failed to read JSON")
             }
 
-            override fun onResponse(
-                call: Call<ArrayList<Person>>,
-                response: Response<ArrayList<Person>>
-            ) {
+            override fun onResponse( call: Call<ArrayList<Person>>, response: Response<ArrayList<Person>>)
+            {
                 people.value = response.body()
             }
 
         })
         return people
-    }
+        }
 }
