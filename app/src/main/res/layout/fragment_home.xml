@@ -46,4 +46,14 @@
         app:srcCompat="@drawable/ic_logon"
         android:contentDescription="@string/todo" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvDataList"
+        android:layout_width="409dp"
+        android:layout_height="563dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnsearch" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

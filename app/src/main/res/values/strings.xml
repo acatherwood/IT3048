@@ -11,8 +11,12 @@
     <string name="menu_gallery">Team Directory</string>
     <string name="btnSave">Save</string>
     <string name="enterDate">Enter Date</string>
-        <string name="todo">TODO</string>
+    <string name="todo">TODO</string>
     <string name="searchDate">Search by Date</string>
     <string name="search">Search</string>
     <string name="person">Search Team Members</string>
-    </resources>
+
+    <string name="hint_word">Word...</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Word not saved because it is empty.</string>
+</resources>
