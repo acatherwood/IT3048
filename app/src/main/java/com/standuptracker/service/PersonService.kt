@@ -8,11 +8,10 @@ import com.standuptracker.dto.Person
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+/*
+ * Retrieves list of people from JSON endpoint
+ */
 class PersonService {
-    /*
-     * Retrieves list of people from JSON endpoint
-     */
     fun fetchPeople(): MutableLiveData<ArrayList<Person>> {
         var people = MutableLiveData<ArrayList<Person>>()
         val service = RetrofitClientInstance.retrofitInstance?.create(IPersonDAO::class.java)
