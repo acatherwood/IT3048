@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="HomeFragment" type="id" />
+    <item name="AddNote" type="id" />
+    <item name="action_AddNote_Save" type="id" />
+</resources>
