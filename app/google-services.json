@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "603810759975-svtpaojl12qennt69nl1i0q7cd6poibb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.standuptracker",
+            "certificate_hash": "d176b9b2bc6ca50d4067bd99a412c916cc20aa9c"
+          }
+        },
+        {
           "client_id": "603810759975-ruclpgps4i8ffnq96mavpu9flcuul1l1.apps.googleusercontent.com",
           "client_type": 3
         }
