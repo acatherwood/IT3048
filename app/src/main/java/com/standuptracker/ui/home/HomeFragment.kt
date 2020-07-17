@@ -3,6 +3,7 @@ package com.standuptracker.ui.home
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,7 @@ import java.util.*
 class HomeFragment : Fragment() {
 
     private val AUTH_REQUEST_CODE = 2002
-    private var user : FirebaseUser? = null
+    private var user: FirebaseUser? = null
     private lateinit var homeViewModel: HomeViewModel
     var cal = Calendar.getInstance()
 
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        btnLogon.setOnClickListener{
+        btnLogon.setOnClickListener {
             logon()
         }
 
@@ -73,7 +74,7 @@ class HomeFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             if (requestCode == AUTH_REQUEST_CODE) {
                 user = FirebaseAuth.getInstance().currentUser
             }
@@ -92,7 +93,18 @@ class HomeFragment : Fragment() {
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
         startActivityForResult(
-            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), AUTH_REQUEST_CODE
+            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
+                .build(), AUTH_REQUEST_CODE
         )
+        btnTakePhoto.setOnClickListener {
+            prepTakPhoto()
+        }
+    }
+
+    /**
+     * See if we have permission or not.
+     */
+    private fun prepTakPhoto() {
+
     }
 }
