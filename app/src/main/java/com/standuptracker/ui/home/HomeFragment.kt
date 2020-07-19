@@ -1,14 +1,20 @@
 package com.standuptracker.ui.home
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -21,9 +27,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment() {
-
+    private val CAMERA_REQUEST_CODE: Int = 1998
+    private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val AUTH_REQUEST_CODE = 2002
-    private var user : FirebaseUser? = null
+    private var user: FirebaseUser? = null
     private lateinit var homeViewModel: HomeViewModel
     var cal = Calendar.getInstance()
 
@@ -44,20 +51,22 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        btnLogon.setOnClickListener{
+        btnLogon.setOnClickListener {
             logon()
         }
 
+        btnTakePhoto.setOnClickListener {
+            prepTakePhoto()
+        }
+
         // create an OnDateSetListener
-        val dateSetListener = object : DatePickerDialog.OnDateSetListener {
-            override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
-                                   dayOfMonth: Int) {
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _view, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 updateDateInView()
             }
-        }
 
         txtDate.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
@@ -71,14 +80,20 @@ class HomeFragment : Fragment() {
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK){
-            if (requestCode == AUTH_REQUEST_CODE) {
-                user = FirebaseAuth.getInstance().currentUser
-            }
-        }
-    }
+    //function that is called back on external intent
+     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+         super.onActivityResult(requestCode, resultCode, data)
+         if (resultCode == RESULT_OK) {
+             if (requestCode == AUTH_REQUEST_CODE) {
+                 user = FirebaseAuth.getInstance().currentUser
+             }
+
+             if (requestCode == CAMERA_REQUEST_CODE) {
+                 val imageBitmap = data!!.extras!!.get("data") as Bitmap
+                 imageView2.setImageBitmap(imageBitmap)
+             }
+         }
+     }
 
     private fun updateDateInView() {
         val myFormat = "MM/dd/yyyy" // mention the format you need
@@ -92,7 +107,56 @@ class HomeFragment : Fragment() {
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
         startActivityForResult(
-            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), AUTH_REQUEST_CODE
+            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
+                .build(), AUTH_REQUEST_CODE
         )
     }
-}
+
+    /**
+     * See if we have permission or not.
+     */
+    private fun prepTakePhoto() {
+        if (ContextCompat.checkSelfPermission(
+                context!!,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            takePhoto()
+        } else {
+            val permissionRequest = arrayOf(Manifest.permission.CAMERA)
+            requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    private fun takePhoto() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(context!!.packageManager)?.also {
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            CAMERA_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //permission granted
+                    takePhoto()
+                } else {
+                    //Toast is Android's built in modal messages
+                    Toast.makeText(
+                        context,
+                        "Unable to take photo without permission",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+ }
