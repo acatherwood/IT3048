@@ -1,9 +1,13 @@
 package com.standuptracker.ui.home
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,16 +55,18 @@ class HomeFragment : Fragment() {
             logon()
         }
 
+        btnTakePhoto.setOnClickListener {
+            prepTakePhoto()
+        }
+
         // create an OnDateSetListener
-        val dateSetListener = object : DatePickerDialog.OnDateSetListener {
-            override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
-                                   dayOfMonth: Int) {
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _view, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 updateDateInView()
             }
-        }
 
         txtDate.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
@@ -74,16 +80,17 @@ class HomeFragment : Fragment() {
         })
     }
 
+    //function that is called back on external intent
      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
          super.onActivityResult(requestCode, resultCode, data)
          if (resultCode == RESULT_OK) {
              if (requestCode == AUTH_REQUEST_CODE) {
                  user = FirebaseAuth.getInstance().currentUser
+             }
 
-                 if (requestCode == CAMERA_REQUEST_CODE) {
-                     val imageBitmap = data!!.extras!!.get("data") as Bitmap
-                     imageView2.setImageBitmap(imageBitmap)
-                 }
+             if (requestCode == CAMERA_REQUEST_CODE) {
+                 val imageBitmap = data!!.extras!!.get("data") as Bitmap
+                 imageView2.setImageBitmap(imageBitmap)
              }
          }
      }
@@ -103,15 +110,12 @@ class HomeFragment : Fragment() {
             AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
                 .build(), AUTH_REQUEST_CODE
         )
-        btnTakePhoto.setOnClickListener {
-            prepTakPhoto()
-        }
     }
 
     /**
      * See if we have permission or not.
      */
-    private fun prepTakPhoto() {
+    private fun prepTakePhoto() {
         if (ContextCompat.checkSelfPermission(
                 context!!,
                 Manifest.permission.CAMERA
@@ -121,6 +125,14 @@ class HomeFragment : Fragment() {
         } else {
             val permissionRequest = arrayOf(Manifest.permission.CAMERA)
             requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    private fun takePhoto() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(context!!.packageManager)?.also {
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
+            }
         }
     }
 
@@ -136,6 +148,7 @@ class HomeFragment : Fragment() {
                     //permission granted
                     takePhoto()
                 } else {
+                    //Toast is Android's built in modal messages
                     Toast.makeText(
                         context,
                         "Unable to take photo without permission",
@@ -146,11 +159,4 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun takePhoto() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(context!!.packageManager)?.also {
-                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
-            }
-        }
-    }
  }
