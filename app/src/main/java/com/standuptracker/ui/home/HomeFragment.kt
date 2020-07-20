@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
                 updateDateInView()
             }
 
-        txtDate.setOnClickListener(object : View.OnClickListener {
+        btnSearch.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
                 activity?.let {
                     DatePickerDialog(
