@@ -9,7 +9,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvNotes"
         android:layout_width="410dp"
-        android:layout_height="660dp"
+        android:layout_height="550dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="71dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
