@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.standuptracker.dto.Note
 
-class ListAdapter(private val list: List<Note>)
+class ListAdapter(private val list: ArrayList<Note>)
     : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

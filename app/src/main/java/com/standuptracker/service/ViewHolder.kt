@@ -20,7 +20,7 @@ class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     fun bind(note:Note) {
-        mDateView?.text = note.dateCreated.toString()
+        mDateView?.text = note.dateCreated
         mNoteView?.text = note.content
     }
 
