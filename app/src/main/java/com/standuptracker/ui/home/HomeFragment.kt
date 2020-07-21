@@ -86,6 +86,7 @@ class HomeFragment : Fragment() {
          if (resultCode == RESULT_OK) {
              if (requestCode == AUTH_REQUEST_CODE) {
                  user = FirebaseAuth.getInstance().currentUser
+                 Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
              }
 
              if (requestCode == CAMERA_REQUEST_CODE) {
