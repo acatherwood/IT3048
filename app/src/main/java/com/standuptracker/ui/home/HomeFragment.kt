@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.standuptracker.R
+import com.standuptracker.dto.Photo
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,6 +35,8 @@ class HomeFragment : Fragment() {
     private var user: FirebaseUser? = null
     private lateinit var homeViewModel: HomeViewModel
     var cal = Calendar.getInstance()
+    private var photos : ArrayList<Photo> = ArrayList<Photo>()
+    private var photoURI : Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -111,7 +115,9 @@ class HomeFragment : Fragment() {
                 .build(), AUTH_REQUEST_CODE
         )
     }
-
+     private fun savePhoto(){
+       //  homeViewModel.save(photos)
+     }
     /**
      * See if we have permission or not.
      */
@@ -154,6 +160,8 @@ class HomeFragment : Fragment() {
                         "Unable to take photo without permission",
                         Toast.LENGTH_LONG
                     ).show()
+                   var photo = Photo(localUri = photoURI.toString())
+                    photos.add(photo)
                 }
             }
         }
