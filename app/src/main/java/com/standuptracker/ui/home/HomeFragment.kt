@@ -3,11 +3,13 @@ package com.standuptracker.ui.home
 import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,11 @@ import com.google.firebase.auth.FirebaseUser
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.auth.FirebaseAuthSettings
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.standuptracker.R
+import com.standuptracker.SearchNotes
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +37,7 @@ class HomeFragment : Fragment() {
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val AUTH_REQUEST_CODE = 2002
     private var user: FirebaseUser? = null
+    private val firestore = Firebase.firestore
     private lateinit var homeViewModel: HomeViewModel
     var cal = Calendar.getInstance()
 
@@ -57,6 +64,10 @@ class HomeFragment : Fragment() {
 
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
+        }
+
+        btnSearch.setOnClickListener{
+            searchNotes()
         }
 
         // create an OnDateSetListener
@@ -135,6 +146,12 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    private fun searchNotes() {
+        val intent = Intent(activity!!, SearchNotes::class.java)
+        startActivity(intent)
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
