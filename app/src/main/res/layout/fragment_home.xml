@@ -38,7 +38,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="80dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/txtDate"
         tools:layout_editor_absoluteX="43dp">
@@ -50,13 +50,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_menu_camera" />
-
-        <ImageButton
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_logon" />
 
         <ImageButton
             android:id="@+id/btnLogon"
@@ -94,10 +87,10 @@
 
     <EditText
         android:id="@+id/txtNote"
-        android:layout_width="351dp"
-        android:layout_height="93dp"
+        android:layout_width="361dp"
+        android:layout_height="48dp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="35dp"
         android:layout_marginBottom="20dp"
         android:ems="10"

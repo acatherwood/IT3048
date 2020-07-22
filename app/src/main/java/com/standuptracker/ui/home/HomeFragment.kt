@@ -66,10 +66,10 @@ class HomeFragment : Fragment() {
             prepTakePhoto()
         }
 
-        btnSearch.setOnClickListener{
+   /*     btnSearch.setOnClickListener{
             searchNotes()
         }
-
+*/
         // create an OnDateSetListener
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _view, year, monthOfYear, dayOfMonth ->
@@ -147,10 +147,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun searchNotes() {
+  /*  private fun searchNotes() {
         val intent = Intent(activity!!, SearchNotes::class.java)
         startActivity(intent)
-    }
+    }*/
 
 
     override fun onRequestPermissionsResult(

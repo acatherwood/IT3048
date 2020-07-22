@@ -18,7 +18,7 @@ import java.util.*
 private val firestore = Firebase.firestore
 
 class SearchNotes : AppCompatActivity() {
-    var mNoteList: ArrayList<Note> = ArrayList<Note>()
+    var mNoteArrayList: ArrayList<Note> = ArrayList<Note>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +26,15 @@ class SearchNotes : AppCompatActivity() {
         btnCloseActivity.setOnClickListener{
             finish()
         }
+        //foo()
+
         rcvNotes.apply {
             // set a LinearLayoutManager to handle Android
             // RecyclerView behavior
             layoutManager = LinearLayoutManager(this@SearchNotes)
             // set the custom adapter to the RecyclerView
-            foo()
-            adapter = ListAdapter(mNoteList)
+
+            adapter = ListAdapter(mNoteArrayList)
         }
     }
 
@@ -45,9 +47,9 @@ class SearchNotes : AppCompatActivity() {
                     var _tempDateCreated = document.data["dateCreated"].toString()
 
                     var _tempNote = Note(_tempNoteContent,_tempDateCreated)
-                    mNoteList.add(_tempNote)
+                    mNoteArrayList.add(_tempNote)
                 }
-                Toast.makeText(this,"Success", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this,"Success", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
                 Log.d(ContentValues.TAG, "Error getting documents: ", exception)
