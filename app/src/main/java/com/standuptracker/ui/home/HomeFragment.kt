@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.standuptracker.R
+import com.standuptracker.dto.Note
 import com.standuptracker.dto.Photo
 import com.standuptracker.dto.Note
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -69,6 +70,9 @@ class HomeFragment : Fragment() {
 
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
+        }
+        btnSave.setOnClickListener {
+            saveNote()
         }
 
         homeViewModel.notes.observe(this, Observer {
@@ -137,6 +141,12 @@ class HomeFragment : Fragment() {
 
         }
     }
+   //TODO save object
+    private fun saveNote() {
+        var note = Note().apply {
+         date = txtDate.text.toString()
+        }
+    }
 
     //function that is called back on external intent
      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -171,7 +181,7 @@ class HomeFragment : Fragment() {
         )
     }
      private fun savePhoto(){
-       //  homeViewModel.save(photos)
+         homeViewModel.save(photos)
      }
     /**
      * See if we have permission or not.
@@ -248,5 +258,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
  }
