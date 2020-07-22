@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.standuptracker.R
+import com.standuptracker.dto.Note
 import com.standuptracker.dto.Photo
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
@@ -62,6 +63,9 @@ class HomeFragment : Fragment() {
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
         }
+        btnSave.setOnClickListener {
+            saveNote()
+        }
 
         // create an OnDateSetListener
         val dateSetListener =
@@ -82,6 +86,12 @@ class HomeFragment : Fragment() {
             }
 
         })
+    }
+   //TODO save object
+    private fun saveNote() {
+        var note = Note().apply {
+         date = txtDate.text.toString()
+        }
     }
 
     //function that is called back on external intent
@@ -116,7 +126,7 @@ class HomeFragment : Fragment() {
         )
     }
      private fun savePhoto(){
-       //  homeViewModel.save(photos)
+         homeViewModel.save(photos)
      }
     /**
      * See if we have permission or not.
@@ -166,5 +176,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
  }
