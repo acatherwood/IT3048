@@ -5,14 +5,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.standuptracker.dto.Note
+import java.util.*
+import kotlin.collections.ArrayList
 
 private lateinit var firestore: FirebaseFirestore
 private var _notes: MutableLiveData<ArrayList<Note>> = MutableLiveData<ArrayList<Note>>()
+private lateinit var _note : Note
+
 
 class HomeViewModel : ViewModel() {
 
@@ -39,11 +44,11 @@ class HomeViewModel : ViewModel() {
                 val allNotes = ArrayList<Note>()
                 val documents = snapshot.documents
                 documents.forEach {
-
-                    val note = it.toObject(Note::class.java)
-                    if (note != null) {
-                        allNotes.add(note!!)
-                    }
+                    val day: String = it.data?.get("dateCreated").toString()
+                    val content = it.data?.get("content").toString()
+                   // val noteId = it.data?.get("noteId").toString()
+                    val note = Note(content = content, dateCreated = day)
+                    allNotes.add(note!!)
                 }
                 _notes.value = allNotes
             }
@@ -78,4 +83,12 @@ class HomeViewModel : ViewModel() {
     }
     
     val text: LiveData<String> = _text
+
+    internal var notes:MutableLiveData<ArrayList<Note>>
+        get() { return _notes}
+        set(value) {_notes = value}
+
+    internal var note: Note
+        get() {return _note}
+        set(value) {_note = value}
 }
