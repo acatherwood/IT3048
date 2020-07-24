@@ -36,6 +36,21 @@
         app:layout_constraintTop_toBottomOf="@+id/text_home" />
 
 
+    <EditText
+        android:id="@+id/txtNote"
+        android:layout_width="361dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="284dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:inputType="textShortMessage|textLongMessage|textMultiLine|text"
+        android:text="Give your photo a description"
+        app:layout_constraintBottom_toTopOf="@+id/txtDate"
+        app:layout_constraintTop_toBottomOf="@+id/spnNotes"
+        tools:layout_editor_absoluteX="43dp"/>
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -89,22 +104,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:srcCompat="@drawable/ic_save" />
 
-    <EditText
-        android:id="@+id/txtNote"
-        android:layout_width="361dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="20dp"
-        android:ems="10"
-        android:inputType="textShortMessage|textLongMessage|textMultiLine|text"
-        android:text="Give your photo a description"
-        app:layout_constraintBottom_toTopOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
         android:id="@+id/spnNotes"

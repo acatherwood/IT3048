@@ -201,6 +201,7 @@ class HomeFragment : Fragment() {
 
     }
 
+    /** TODO: implement this functionality */
     /*  private fun searchNotes() {
           val intent = Intent(activity!!, SearchNotes::class.java)
           startActivity(intent)
