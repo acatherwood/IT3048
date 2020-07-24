@@ -87,16 +87,16 @@ class HomeFragment : Fragment() {
                 updateDateInView()
             }
 
-//        btnSearch.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(view: View) {
-//                activity?.let {
-//                    DatePickerDialog(
-//                        it, dateSetListener, // set DatePickerDialog to point to today's date when it loads up
-//                        cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
-//                }
-//            }
-//
-//        })
+        txtDate.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View) {
+                activity?.let {
+                    DatePickerDialog(
+                        it, dateSetListener, // set DatePickerDialog to point to today's date when it loads up
+                        cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                }
+            }
+
+        })
 
         spnNotes.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             /**

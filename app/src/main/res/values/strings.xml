@@ -14,6 +14,7 @@
     <string name="searchDate">Search by Date</string>
     <string name="search">Search</string>
     <string name="person">Search Team Members</string>
+    <string name="todo">TODO</string>
     <string name="log_on">Log On</string>
     <string name="TakePhoto">Take Photo</string>
 </resources>
