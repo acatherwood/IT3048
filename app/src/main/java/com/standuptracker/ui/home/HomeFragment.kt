@@ -29,7 +29,6 @@ import com.google.firebase.ktx.Firebase
 import com.standuptracker.R
 import com.standuptracker.dto.Note
 import com.standuptracker.dto.Photo
-import com.standuptracker.dto.Note
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -141,12 +140,12 @@ class HomeFragment : Fragment() {
 
         }
     }
-   //TODO save object
-    private fun saveNote() {
-        var note = Note().apply {
-         date = txtDate.text.toString()
-        }
-    }
+//   //TODO save object
+//    private fun saveNote() {
+//        var note = Note().apply {
+//         date = txtDate.text.toString()
+//        }
+//    }
 
     //function that is called back on external intent
      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
