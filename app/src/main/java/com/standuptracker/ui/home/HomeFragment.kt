@@ -179,9 +179,9 @@ class HomeFragment : Fragment() {
                 .build(), AUTH_REQUEST_CODE
         )
     }
-     private fun savePhoto(){
-         homeViewModel.save(photos)
-     }
+//     private fun savePhoto(){
+//         homeViewModel.save(photos)
+//     }
     /**
      * See if we have permission or not.
      */

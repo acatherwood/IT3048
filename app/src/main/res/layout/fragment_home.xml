@@ -50,21 +50,6 @@
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/txtNote"
-        android:layout_width="361dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="284dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="20dp"
-        android:ems="10"
-        android:inputType="textShortMessage|textLongMessage|textMultiLine|text"
-        android:text="Give your photo a description"
-        app:layout_constraintBottom_toTopOf="@+id/txtDate"
-        app:layout_constraintTop_toBottomOf="@+id/spnNotes"
-        tools:layout_editor_absoluteX="43dp"/>
-
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -88,6 +73,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:srcCompat="@drawable/fui_ic_anonymous_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:srcCompat="@drawable/ic_save" />
+
     </LinearLayout>
 
     <ImageView
@@ -101,18 +97,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_launcher_background" />
-
-    <ImageButton
-        android:id="@+id/btnSave"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:srcCompat="@drawable/ic_save" />
 
 
     <Spinner
