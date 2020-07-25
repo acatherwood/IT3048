@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Contacts
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
@@ -29,19 +29,22 @@ import com.google.firebase.ktx.Firebase
 import com.standuptracker.R
 import com.standuptracker.dto.Note
 import com.standuptracker.dto.Photo
+import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.random.Random
+import kotlin.collections.ArrayList
+//import android.widget.Toast.makeText as Toast.makeText
 
 class HomeFragment : Fragment() {
+    private val SAVE_IMAGE_REQUEST_CODE: Int = 2001    
     private val CAMERA_REQUEST_CODE: Int = 1998
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val AUTH_REQUEST_CODE = 2002
     private var user: FirebaseUser? = null
     private lateinit var note: Note
-    private val firestore = Firebase.firestore
     private lateinit var homeViewModel: HomeViewModel
+   // private lateinit var applicationViewModel: HomeViewModel
     var cal = Calendar.getInstance()
     private var photos : ArrayList<Photo> = ArrayList<Photo>()
     private var photoURI : Uri? = null
@@ -82,9 +85,9 @@ class HomeFragment : Fragment() {
             searchNotes()
         }
 */
-        btnSave.setOnClickListener{
-            saveNote()
-        }
+       // btnSave.setOnClickListener {
+        //   saveNote()
+       //}
         // create an OnDateSetListener
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _view, year, monthOfYear, dayOfMonth ->
@@ -156,9 +159,15 @@ class HomeFragment : Fragment() {
                  Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
              }
 
+             
              if (requestCode == CAMERA_REQUEST_CODE) {
                  val imageBitmap = data!!.extras!!.get("data") as Bitmap
                  imageView2.setImageBitmap(imageBitmap)
+            }else if (requestCode == SAVE_IMAGE_REQUEST_CODE) {
+                 Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
+
+                 var photo = Photo(localUri = photoURI.toString())
+                 photos.add(photo)
              }
          }
      }
@@ -211,10 +220,9 @@ class HomeFragment : Fragment() {
     internal fun saveNote() {
         storeNote()
 
-        homeViewModel.save(note)
-
+        homeViewModel.save(note, photos)
         note = Note()
-
+        photos = ArrayList<Photo>()
     }
 
     /** TODO: implement this functionality */
@@ -223,7 +231,6 @@ class HomeFragment : Fragment() {
           startActivity(intent)
       }*/
     internal fun storeNote() {
-
 
         note.apply {
 
@@ -250,9 +257,10 @@ class HomeFragment : Fragment() {
                         context,
                         "Unable to take photo without permission",
                         Toast.LENGTH_LONG
-                    ).show()
-                   var photo = Photo(localUri = photoURI.toString())
-                    photos.add(photo)
+                    ).show()                
+                    
+                   //var photo = Photo(localUri = photoURI.toString())
+                  //  photos.add(photo)
                 }
             }
         }

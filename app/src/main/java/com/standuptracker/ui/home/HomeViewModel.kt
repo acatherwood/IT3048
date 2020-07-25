@@ -5,13 +5,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.google.firebase.ktx.Firebase
 import com.standuptracker.dto.Note
-import java.util.*
+import com.standuptracker.dto.Photo
 import kotlin.collections.ArrayList
 
 private lateinit var firestore: FirebaseFirestore
@@ -59,8 +56,9 @@ class HomeViewModel : ViewModel() {
     }
 
     fun save(
-        note: Note
-       // photos: java.util.ArrayList<Photo>,
+        note: Note,
+        photos: java.util.ArrayList<Photo>
+        // photos: java.util.ArrayList<Photo>,
        // user: FirebaseUser
     ) {
         val document =
@@ -75,10 +73,24 @@ class HomeViewModel : ViewModel() {
         val set = document.set(note)
         set.addOnSuccessListener {
             Log.d("Firebase", "document saved")
+            if (photos != null && photos.size > 0) {
+               savePhotos(note, photos)
+            }
         }
         set.addOnFailureListener {
             Log.d("Firebase", "Save Failed")
         }
+    }
+
+    private fun savePhotos(note : Note, photos: java.util.ArrayList<Photo>) {
+       val  collection = firestore.collection("notes").document(note.noteId)
+           .collection("photos")
+           photos.forEach{
+           photo ->   val task = collection.add(photo)
+               task.addOnSuccessListener {
+               photo.id = it.id
+               }
+           }
     }
 
     private val _text = MutableLiveData<String>().apply {
