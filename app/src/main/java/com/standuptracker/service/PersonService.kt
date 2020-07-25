@@ -11,16 +11,20 @@ import retrofit2.Response
 /*
  * Retrieves list of people from JSON endpoint
  */
-class PersonService {
-    fun fetchPeople() : MutableLiveData<ArrayList<Person>> {
+class PersonService
+{
+    fun fetchPeople() : MutableLiveData<ArrayList<Person>>
+    {
         var people = MutableLiveData<ArrayList<Person>>()
         val service = RetrofitClientInstance.retrofitInstance?.create(IPersonDAO::class.java)
         val call = service?.getAllPeople()
         // must put call on the background thread
-        call?.enqueue(object : Callback<ArrayList<Person>> {
-            override fun onFailure(call: Call<ArrayList<Person>>, t: Throwable) {
+        call?.enqueue(object : Callback<ArrayList<Person>>
+        {
+            override fun onFailure(call: Call<ArrayList<Person>>, t: Throwable)
+            {
                 Log.d("JSON", "Save Failed")
-                throw Exception("failed to read JSON")
+                throw Exception("Failed to read JSON")
             }
 
             override fun onResponse( call: Call<ArrayList<Person>>, response: Response<ArrayList<Person>>)

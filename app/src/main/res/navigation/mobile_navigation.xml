@@ -16,5 +16,10 @@
         android:name="com.standuptracker.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/nav_notifications"
+        android:name="com.standuptracker.ui.gallery.GalleryFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
 
 </navigation>
