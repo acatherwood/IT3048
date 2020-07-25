@@ -15,7 +15,7 @@ class GalleryViewModel : ViewModel() {
         fetchPeople()
     }
 
-    private fun fetchPeople() {
+    fun fetchPeople() {
         //read json response into countries variable
         people = personService.fetchPeople()
     }
