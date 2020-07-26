@@ -5,13 +5,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.standuptracker.dto.Note
-import java.util.*
+
+import com.standuptracker.dto.Photo
+
 import kotlin.collections.ArrayList
 
 private lateinit var firestore: FirebaseFirestore
@@ -25,12 +28,15 @@ class HomeViewModel : ViewModel() {
         firestore = FirebaseFirestore.getInstance()
         firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
         listenToNotes()
+
     }
+
 
     /**
      * This will hear any updates from Firestore
      */
     private fun listenToNotes() {
+
 
 
         /**TODO: Make listbox only populate notes from user-selected date. */
@@ -114,6 +120,7 @@ class HomeViewModel : ViewModel() {
     
     val text: LiveData<String> = _text
 
+
     internal var notes:MutableLiveData<ArrayList<Note>>
         get() { return _notes}
         set(value) {_notes = value}
@@ -122,3 +129,4 @@ class HomeViewModel : ViewModel() {
         get() {return _note}
         set(value) {_note = value}
 }
+
