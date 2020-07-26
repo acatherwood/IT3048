@@ -5,9 +5,6 @@
     <mapping directory="$PROJECT_DIR$/Database" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Firebase" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/IT3048" vcs="Git" />
-<<<<<<< Updated upstream
-=======
     <mapping directory="$PROJECT_DIR$/SavePhoto" vcs="Git" />
->>>>>>> Stashed changes
   </component>
 </project>

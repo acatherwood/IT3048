@@ -40,8 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home"
-        tools:ignore="TextViewEdits" />
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -60,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_save"
-            android:contentDescription="TODO" />
+        />
 
 
         <ImageButton
@@ -69,16 +68,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_menu_camera"
-            android:contentDescription="TODO" />
+            app:srcCompat="@drawable/ic_menu_camera" />
 
 <ImageButton
             android:id="@+id/btnLogon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/fui_ic_anonymous_white_24dp"
-    android:contentDescription="TODO" />
+            app:srcCompat="@drawable/fui_ic_anonymous_white_24dp" />
 
 
 
@@ -96,7 +93,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:srcCompat="@drawable/ic_launcher_background"
-        android:contentDescription="TODO" />
+    />
 
 
 

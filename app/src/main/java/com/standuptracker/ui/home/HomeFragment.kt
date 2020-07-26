@@ -161,7 +161,7 @@ class HomeFragment : Fragment() {
                  Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
 
                //  var photo = Photo(localUri = photoURI.toString())
-               //  photos.add(photo)
+
              }
          }
      }
@@ -170,6 +170,7 @@ class HomeFragment : Fragment() {
         val myFormat = "MM/dd/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         txtDate!!.text = sdf.format(cal.getTime())
+        homeViewModel.filterNotes(txtDate.text.toString())
     }
 
     private fun logon() {
@@ -183,9 +184,6 @@ class HomeFragment : Fragment() {
         )
     }
 
-//     private fun savePhoto(){
-//         homeViewModel.save(photo)
-//     }
 
     /**
      * See if we have permission or not.
