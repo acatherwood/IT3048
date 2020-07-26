@@ -126,6 +126,7 @@ class HomeFragment : Fragment() {
                 // use this specimen object to populate our UI fields
                 txtNote.setText(note.content)
                 txtDate.setText(note.dateCreated)
+                txtNoteID.setText(note.noteId)
                 homeViewModel.note = note
 
 
@@ -214,6 +215,7 @@ class HomeFragment : Fragment() {
 
             content = txtNote.text.toString()
             dateCreated = txtDate.text.toString()
+            noteId = txtNoteID.text.toString()
         }
         homeViewModel.note=note
     }

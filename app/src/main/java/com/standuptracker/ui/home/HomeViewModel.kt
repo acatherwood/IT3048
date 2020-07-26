@@ -47,10 +47,37 @@ class HomeViewModel : ViewModel() {
                 val allNotes = ArrayList<Note>()
                 val documents = snapshot.documents
                 documents.forEach {
+                    val id = it.data?.get("noteId").toString()
                     val day: String = it.data?.get("dateCreated").toString()
                     val content = it.data?.get("content").toString()
                    // val noteId = it.data?.get("noteId").toString()
-                    val note = Note(content = content, dateCreated = day)
+                    val note = Note(content = content, dateCreated = day, noteId=id)
+                    allNotes.add(note!!)
+                }
+                _notes.value = allNotes
+            }
+        }
+    }
+
+    fun filterNotes(info:String) {
+        firestore.collection("notes").whereEqualTo("dateCreated",info).addSnapshotListener {
+                snapshot, e ->
+            // if there is an exception we want to skip.
+            if (e != null) {
+                Log.w(TAG, "Listen Failed", e)
+                return@addSnapshotListener
+            }
+            // if we are here, we did not encounter an exception
+            if (snapshot != null) {
+                // now, we have a populated shapshot
+                val allNotes = ArrayList<Note>()
+                val documents = snapshot.documents
+                documents.forEach {
+                    val id = it.data?.get("noteId").toString()
+                    val day: String = it.data?.get("dateCreated").toString()
+                    val content = it.data?.get("content").toString()
+                    // val noteId = it.data?.get("noteId").toString()
+                    val note = Note(content = content, dateCreated = day,noteId = id)
                     allNotes.add(note!!)
                 }
                 _notes.value = allNotes
