@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
         android:textAlignment="center"
@@ -20,7 +20,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.325" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <TextView
@@ -29,8 +29,9 @@
         android:layout_height="19dp"
 
 
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="5dp"
 
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
         android:ems="10"
@@ -38,28 +39,27 @@
         android:inputType="date"
         app:layout_constraintBottom_toTopOf="@+id/spnNotes"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+        app:layout_constraintTop_toBottomOf="@id/textView4" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
 
-        android:layout_marginBottom="39dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/spnNotes"
-        tools:layout_editor_absoluteX="43dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+        tools:layout_editor_absoluteX="43dp">
 
         <ImageButton
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_save"
-        />
+            app:srcCompat="@drawable/ic_save" />
 
 
         <ImageButton
@@ -70,13 +70,12 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_menu_camera" />
 
-<ImageButton
+        <ImageButton
             android:id="@+id/btnLogon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:srcCompat="@drawable/fui_ic_anonymous_white_24dp" />
-
 
 
     </LinearLayout>
@@ -120,16 +119,15 @@
         android:layout_width="401dp"
         android:layout_height="25dp"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="97dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="7dp"
-        android:layout_marginBottom="20dp"
         android:text="Search by Date"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/txtDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@id/text_home" />
 
     <TextView
         android:id="@+id/textView5"
@@ -186,8 +184,6 @@
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
