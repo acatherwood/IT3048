@@ -1,6 +1,7 @@
 package com.standuptracker.ui.home
 
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,17 +12,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.standuptracker.dto.Note
 
 import com.standuptracker.dto.Photo
 
 import kotlin.collections.ArrayList
 
+private var storageReference = FirebaseStorage.getInstance().getReference()
 private lateinit var firestore: FirebaseFirestore
 private var _notes: MutableLiveData<ArrayList<Note>> = MutableLiveData<ArrayList<Note>>()
 private lateinit var _note : Note
-
-
+private var _user: FirebaseUser? = null
 class HomeViewModel : ViewModel() {
 
     init {
@@ -56,8 +58,8 @@ class HomeViewModel : ViewModel() {
                     val id = it.data?.get("noteId").toString()
                     val day: String = it.data?.get("dateCreated").toString()
                     val content = it.data?.get("content").toString()
-                   // val noteId = it.data?.get("noteId").toString()
-                    val note = Note(content = content, dateCreated = day, noteId=id)
+                    val localPhoto = it.data?.get("localUri").toString()
+                    val note = Note(content = content, dateCreated = day, noteId=id, localUri = localPhoto)
                     allNotes.add(note!!)
                 }
                 _notes.value = allNotes
@@ -92,9 +94,9 @@ class HomeViewModel : ViewModel() {
     }
 
     fun save(
-        note: Note
-       // photos: java.util.ArrayList<Photo>,
-       // user: FirebaseUser
+        note: Note,
+        photo: Photo,
+        user: FirebaseUser
     ) {
         val document =
             if (note.noteId != null && !note.noteId.isEmpty()) {
@@ -108,10 +110,57 @@ class HomeViewModel : ViewModel() {
         val set = document.set(note)
         set.addOnSuccessListener {
             Log.d("Firebase", "document saved")
+            savePhoto(note,photo,user)
         }
         set.addOnFailureListener {
             Log.d("Firebase", "Save Failed")
         }
+    }
+
+    private fun savePhoto(
+        note:Note,
+        photo: Photo,
+        user: FirebaseUser
+    ) {
+        val collection = firestore.collection("notes")
+            .document(note.noteId)
+            .collection("photos")
+         val task = collection.add(photo)
+            task.addOnSuccessListener {
+                photo.id = it.id
+                photo.description = note.content
+                photo.dateTaken = note.dateCreated
+
+                uploadPhoto(note, photo, user)
+            }
+        }
+
+
+    private fun uploadPhoto(note:Note, photo:Photo, user: FirebaseUser) {
+            var uri = Uri.parse(photo.localUri.toString())
+            val imageRef = storageReference.child("images/" + user.uid + "/" + uri.lastPathSegment)
+            val uploadTask = imageRef.putFile(uri)
+            uploadTask.addOnSuccessListener {
+                val downloadUrl = imageRef.downloadUrl
+                downloadUrl.addOnSuccessListener {
+                    photo.remoteUri = it.toString()
+                    note.localUri = photo.localUri
+                    // update our Cloud Firestore with the public image URI.
+                    updatePhotoDatabase(note, photo)
+                }
+
+            }
+            uploadTask.addOnFailureListener {
+                Log.e(TAG, it.message)
+            }
+        }
+
+    private fun updatePhotoDatabase(note:Note, photo: Photo) {
+        firestore.collection("notes")
+            .document(note.noteId)
+            .collection("photos")
+            .document(photo.id)
+            .set(photo)
     }
 
     private val _text = MutableLiveData<String>().apply {
@@ -128,5 +177,6 @@ class HomeViewModel : ViewModel() {
     internal var note: Note
         get() {return _note}
         set(value) {_note = value}
-}
 
+
+}
