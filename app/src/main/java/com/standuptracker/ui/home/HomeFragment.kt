@@ -6,7 +6,11 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.media.Image
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Contacts
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +20,13 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.Timestamp
+
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
@@ -32,14 +38,25 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 
+import com.standuptracker.dto.Photo
+import java.io.File
+
+
 class HomeFragment : Fragment() {
+    private var photo = Photo()
+    private lateinit var currentPhotoPath: String
+    private val SAVE_IMAGE_REQUEST_CODE: Int = 2001    
     private val CAMERA_REQUEST_CODE: Int = 1998
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val AUTH_REQUEST_CODE = 2002
-    private var user: FirebaseUser? = null
+    private lateinit var user: FirebaseUser
     private lateinit var note: Note
+    private var photoURI: Uri? = null
+
     private val firestore = Firebase.firestore
+
     private lateinit var homeViewModel: HomeViewModel
+
     var cal = Calendar.getInstance()
 
     override fun onCreateView(
@@ -71,13 +88,12 @@ class HomeFragment : Fragment() {
                 notes -> spnNotes.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, notes))
         })
 
-   /*     btnSearch.setOnClickListener{
-            searchNotes()
-        }
-*/
-        btnSave.setOnClickListener{
+        btnSave.setOnClickListener {
             saveNote()
         }
+
+
+
         // create an OnDateSetListener
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _view, year, monthOfYear, dayOfMonth ->
@@ -95,8 +111,9 @@ class HomeFragment : Fragment() {
                         cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
                 }
             }
-
         })
+
+
 
         spnNotes.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             /**
@@ -107,7 +124,9 @@ class HomeFragment : Fragment() {
              * @param parent The AdapterView that now contains no selected item.
              */
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                txtNoteID.setText(" ")
+                txtNote.setText(" ")
+                txtDate.setText(" ")
             }
             /**
              * @param parent The AdapterView where the selection happened
@@ -116,37 +135,55 @@ class HomeFragment : Fragment() {
              * @param id The row id of the item that is selected
              */
 
+
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
             ) {
+
                 note = parent?.getItemAtPosition(position) as Note
                 // use this specimen object to populate our UI fields
                 txtNote.setText(note.content)
                 txtDate.setText(note.dateCreated)
-                homeViewModel.note = note
 
+
+
+                txtNoteID.setText(note.noteId)
+
+                homeViewModel.note = note
+                imageView2.setImageURI(Uri.parse(note.localUri))
 
             }
 
+
         }
+
     }
+
+
+
 
     //function that is called back on external intent
      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
          super.onActivityResult(requestCode, resultCode, data)
          if (resultCode == RESULT_OK) {
-             if (requestCode == AUTH_REQUEST_CODE) {
-                 user = FirebaseAuth.getInstance().currentUser
-                 Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
+
+             when(requestCode){
+                 AUTH_REQUEST_CODE -> {
+                     user = FirebaseAuth.getInstance().currentUser!!
+                     Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
+                 }
+                 CAMERA_REQUEST_CODE -> {}
+                 SAVE_IMAGE_REQUEST_CODE -> {
+                     Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
+                     imageView2.setImageURI(photoURI)
+                     photo.localUri = photoURI.toString()
+                     note.localUri = photo.localUri
+                 }
              }
 
-             if (requestCode == CAMERA_REQUEST_CODE) {
-                 val imageBitmap = data!!.extras!!.get("data") as Bitmap
-                 imageView2.setImageBitmap(imageBitmap)
-             }
          }
      }
 
@@ -154,6 +191,7 @@ class HomeFragment : Fragment() {
         val myFormat = "MM/dd/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         txtDate!!.text = sdf.format(cal.getTime())
+        homeViewModel.filterNotes(txtDate.text.toString())
     }
 
     private fun logon() {
@@ -167,9 +205,8 @@ class HomeFragment : Fragment() {
         )
     }
 
-    /**
-     * See if we have permission or not.
-     */
+
+
     private fun prepTakePhoto() {
         if (ContextCompat.checkSelfPermission(
                 context!!,
@@ -184,36 +221,52 @@ class HomeFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(context!!.packageManager)?.also {
-                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also{
+                takePictureIntent -> takePictureIntent.resolveActivity(context!!.packageManager)
+            if (takePictureIntent == null) {
+                Toast.makeText(context, "Unable to save photo", Toast.LENGTH_LONG).show()
+            } else {
+                // if we are here, we have a valid intent.
+                val photoFile: File = createImageFile()
+                photoFile?.also {
+                    photoURI = FileProvider.getUriForFile(activity!!.applicationContext, "com.standuptracker.android.fileprovider", it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, SAVE_IMAGE_REQUEST_CODE)
+                }
             }
+        }
+    }
+    
+    private fun createImageFile() : File {
+        // genererate a unique filename with date.
+        val timestamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        // get access to the directory where we can write pictures.
+        val storageDir: File? = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("StandupTracker${timestamp}", ".jpg", storageDir).apply {
+            currentPhotoPath = absolutePath
         }
     }
 
 
-
-    internal fun saveNote() {
+    private fun saveNote() {
         storeNote()
 
-        homeViewModel.save(note)
+        homeViewModel.save(note,photo,user)
 
         note = Note()
 
     }
 
-    /** TODO: implement this functionality */
-    /*  private fun searchNotes() {
-          val intent = Intent(activity!!, SearchNotes::class.java)
-          startActivity(intent)
-      }*/
-    internal fun storeNote() {
 
+    private fun storeNote() {
 
         note.apply {
 
             content = txtNote.text.toString()
             dateCreated = txtDate.text.toString()
+
+            noteId = txtNoteID.text.toString()
+
         }
         homeViewModel.note=note
     }
@@ -240,5 +293,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
  }
