@@ -42,9 +42,6 @@ import com.standuptracker.dto.Photo
 import java.io.File
 
 
-//import android.widget.Toast.makeText as Toast.makeText
-
-
 class HomeFragment : Fragment() {
     private var photo = Photo()
     private lateinit var currentPhotoPath: String
@@ -59,7 +56,7 @@ class HomeFragment : Fragment() {
     private val firestore = Firebase.firestore
 
     private lateinit var homeViewModel: HomeViewModel
-   // private lateinit var applicationViewModel: HomeViewModel
+
     var cal = Calendar.getInstance()
 
     override fun onCreateView(
@@ -145,9 +142,7 @@ class HomeFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                txtNoteID.setText(" ")
-                txtNote.setText(" ")
-                txtDate.setText(" ")
+
                 note = parent?.getItemAtPosition(position) as Note
                 // use this specimen object to populate our UI fields
                 txtNote.setText(note.content)
@@ -164,9 +159,7 @@ class HomeFragment : Fragment() {
 
 
         }
-        txtNoteID.setText(" ")
-        txtNote.setText(" ")
-        txtDate.setText(" ")
+
     }
 
 
@@ -176,24 +169,21 @@ class HomeFragment : Fragment() {
      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
          super.onActivityResult(requestCode, resultCode, data)
          if (resultCode == RESULT_OK) {
-             if (requestCode == AUTH_REQUEST_CODE) {
-                 user = FirebaseAuth.getInstance().currentUser!!
-                 Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
+
+             when(requestCode){
+                 AUTH_REQUEST_CODE -> {
+                     user = FirebaseAuth.getInstance().currentUser!!
+                     Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
+                 }
+                 CAMERA_REQUEST_CODE -> {}
+                 SAVE_IMAGE_REQUEST_CODE -> {
+                     Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
+                     imageView2.setImageURI(photoURI)
+                     photo.localUri = photoURI.toString()
+                     note.localUri = photo.localUri
+                 }
              }
 
-             
-             if (requestCode == CAMERA_REQUEST_CODE) {
-
-
-            }else if (requestCode == SAVE_IMAGE_REQUEST_CODE) {
-                 Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
-                 imageView2.setImageURI(photoURI)
-
-
-                 photo.localUri = photoURI.toString()
-                 note.localUri = photo.localUri
-
-             }
          }
      }
 
@@ -201,7 +191,6 @@ class HomeFragment : Fragment() {
         val myFormat = "MM/dd/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         txtDate!!.text = sdf.format(cal.getTime())
-
         homeViewModel.filterNotes(txtDate.text.toString())
     }
 
@@ -217,9 +206,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    /**
-     * See if we have permission or not.
-     */
+
     private fun prepTakePhoto() {
         if (ContextCompat.checkSelfPermission(
                 context!!,
@@ -233,7 +220,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun takePhoto() {
+    private fun takePhoto() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also{
                 takePictureIntent -> takePictureIntent.resolveActivity(context!!.packageManager)
             if (takePictureIntent == null) {
@@ -271,7 +258,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    internal fun storeNote() {
+    private fun storeNote() {
 
         note.apply {
 
@@ -302,12 +289,8 @@ class HomeFragment : Fragment() {
                         "Unable to take photo without permission",
                         Toast.LENGTH_LONG
                     ).show()
-
-
-
                 }
             }
         }
     }
-
  }

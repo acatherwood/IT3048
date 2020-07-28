@@ -84,8 +84,8 @@ class HomeViewModel : ViewModel() {
                     val id = it.data?.get("noteId").toString()
                     val day: String = it.data?.get("dateCreated").toString()
                     val content = it.data?.get("content").toString()
-                    // val noteId = it.data?.get("noteId").toString()
-                    val note = Note(content = content, dateCreated = day,noteId = id)
+                    val localPhoto = it.data?.get("localUri").toString()
+                    val note = Note(content = content, dateCreated = day,noteId = id, localUri = localPhoto)
                     allNotes.add(note!!)
                 }
                 _notes.value = allNotes
