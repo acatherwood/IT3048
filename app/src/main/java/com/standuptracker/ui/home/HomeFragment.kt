@@ -40,6 +40,8 @@ import kotlin.random.Random
 
 import com.standuptracker.dto.Photo
 import java.io.File
+import java.io.IOException
+import java.lang.reflect.InvocationTargetException
 
 
 class HomeFragment : Fragment() {
@@ -89,7 +91,8 @@ class HomeFragment : Fragment() {
         })
 
         btnSave.setOnClickListener {
-            saveNote()
+                saveNote()
+
         }
 
 
@@ -161,8 +164,6 @@ class HomeFragment : Fragment() {
         }
 
     }
-
-
 
 
     //function that is called back on external intent
@@ -249,11 +250,18 @@ class HomeFragment : Fragment() {
 
 
     private fun saveNote() {
-        storeNote()
+       try{
+           storeNote()
 
-        homeViewModel.save(note,photo,user)
+           homeViewModel.save(note,photo,user)
 
-        note = Note()
+           note = Note()
+
+
+       }catch (t: Throwable){
+           Toast.makeText(context, "You must log in to make changes.", Toast.LENGTH_LONG).show()
+       }
+
 
     }
 

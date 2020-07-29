@@ -20,7 +20,7 @@ class PersonUnitTest {
     }
 
     @Test
-    fun countryDTO_maintainsState() {
+    fun personDTO_maintainsState() {
         var person = Person(1, "rfrith0@stanford.edu", "Female", "Frith", "Roxanna")
         Assert.assertTrue(person.email.equals("rfrith0@stanford.edu"))
         Assert.assertTrue(person.gender.equals("Female"))
