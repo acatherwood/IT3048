@@ -16,7 +16,7 @@ import java.lang.Exception
 
 import kotlin.collections.ArrayList
 
-private var storageReference = FirebaseStorage.getInstance().getReference()
+private var storageReference = FirebaseStorage.getInstance().reference
 private lateinit var firestore: FirebaseFirestore
 private var _notes: MutableLiveData<ArrayList<Note>> = MutableLiveData<ArrayList<Note>>()
 private lateinit var _note : Note
@@ -57,7 +57,7 @@ class HomeViewModel : ViewModel() {
                     val content = it.data?.get("content").toString()
                     val remotePhoto = it.data?.get("uri").toString()
                     val note = Note(content = content, dateCreated = day, noteId=id, uri = remotePhoto)
-                    allNotes.add(note!!)
+                    allNotes.add(note)
                 }
                 _notes.value = allNotes
             }
@@ -83,7 +83,7 @@ class HomeViewModel : ViewModel() {
                     val content = it.data?.get("content").toString()
                     val remotePhoto = it.data?.get("uri").toString()
                     val note = Note(content = content, dateCreated = day,noteId = id, uri = remotePhoto)
-                    allNotes.add(note!!)
+                    allNotes.add(note)
                 }
                 _notes.value = allNotes
             }
