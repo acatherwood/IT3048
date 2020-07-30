@@ -5,12 +5,9 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Contacts
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -25,8 +22,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.ui.auth.AuthUI
-
-
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
@@ -36,12 +31,8 @@ import com.standuptracker.dto.Note
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.random.Random
-
 import com.standuptracker.dto.Photo
 import java.io.File
-import java.io.IOException
-import java.lang.reflect.InvocationTargetException
 
 
 class HomeFragment : Fragment() {
@@ -54,8 +45,6 @@ class HomeFragment : Fragment() {
     private lateinit var user: FirebaseUser
     private lateinit var note: Note
     private var photoURI: Uri? = null
-
-    private val firestore = Firebase.firestore
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -106,6 +95,7 @@ class HomeFragment : Fragment() {
                 updateDateInView()
             }
 
+        // pop calendar open when user clicks on the date field
         txtDate.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
                 activity?.let {
@@ -147,12 +137,9 @@ class HomeFragment : Fragment() {
             ) {
 
                 note = parent?.getItemAtPosition(position) as Note
-                // use this specimen object to populate our UI fields
+                // use this note object to populate our UI fields
                 txtNote.setText(note.content)
                 txtDate.setText(note.dateCreated)
-
-
-
                 txtNoteID.setText(note.noteId)
 
                 homeViewModel.note = note
@@ -172,11 +159,13 @@ class HomeFragment : Fragment() {
          if (resultCode == RESULT_OK) {
 
              when(requestCode){
+                 // log the user in
                  AUTH_REQUEST_CODE -> {
                      user = FirebaseAuth.getInstance().currentUser!!
                      Toast.makeText(activity!!,"You have been successfully logged in.",Toast.LENGTH_LONG).show()
                  }
                  CAMERA_REQUEST_CODE -> {}
+                 // allow camera access
                  SAVE_IMAGE_REQUEST_CODE -> {
                      Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
                      imageView2.setImageURI(photoURI)
@@ -197,6 +186,7 @@ class HomeFragment : Fragment() {
 
     private fun logon() {
         var providers = arrayListOf(
+            //give user ability to login with email or google
             AuthUI.IdpConfig.EmailBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
@@ -214,8 +204,10 @@ class HomeFragment : Fragment() {
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+            // if permission is granted, take the photo
             takePhoto()
         } else {
+            //otherwise, request permission
             val permissionRequest = arrayOf(Manifest.permission.CAMERA)
             requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE)
         }

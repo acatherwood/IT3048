@@ -32,38 +32,4 @@ class NoteUnitTest {
         assertTrue(note.toString().equals("imageDisplayTest1"))
     }
 
-//    @Test
-//    fun searchForFinalTest2_returnsFinalTest2(){
-//        givenMockedNotesAreAvailable()
-//        whenSearchByDateForJuly142020()
-//        thenResultContainsFinalTest2()
-//
-//    }
-//
-//    private fun givenMockedNotesAreAvailable() {
-//
-//    }
-//
-//    private fun whenSearchByDateForJuly142020() {
-//        hvm = HomeViewModel()
-//        hvm.filterNotes("7/14/2020")
-//    }
-//
-//
-//    private fun thenResultContainsFinalTest2() {
-//        var finalTest2Found = false
-//        hvm.notes.observeForever{
-//            assertNotNull(it)
-//            assertTrue(it.size > 0)
-//            it.forEach {
-//                if (it.content == "Final Test 2" && it.dateCreated == "7/14/2020"){
-//                    finalTest2Found = true
-//            }
-//
-//            }
-//        }
-//        assertTrue(finalTest2Found)
-//    }
-
-
 }

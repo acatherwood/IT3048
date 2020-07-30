@@ -25,6 +25,7 @@ class PersonService {
 
             override fun onResponse( call: Call<ArrayList<Person>>, response: Response<ArrayList<Person>>)
             {
+                //populate person object with json response
                 people.value = response.body()
             }
 

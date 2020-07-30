@@ -6,17 +6,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.standuptracker.dto.Note
-
 import com.standuptracker.dto.Photo
-
 import kotlin.collections.ArrayList
 
 private var storageReference = FirebaseStorage.getInstance().getReference()
