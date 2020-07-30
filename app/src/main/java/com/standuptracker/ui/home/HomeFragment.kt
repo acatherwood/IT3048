@@ -2,7 +2,10 @@ package com.standuptracker.ui.home
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,20 +15,22 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.view.Window
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import com.standuptracker.R
 import com.standuptracker.dto.Note
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -45,6 +50,7 @@ class HomeFragment : Fragment() {
     private lateinit var user: FirebaseUser
     private lateinit var note: Note
     private var photoURI: Uri? = null
+    private val firestore = Firebase.firestore
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -79,12 +85,23 @@ class HomeFragment : Fragment() {
                 notes -> spnNotes.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, notes))
         })
 
+
         btnSave.setOnClickListener {
                 saveNote()
 
         }
 
+        btnAddNote.setOnClickListener{
+            txtNoteID.setText("")
+            txtNote.setText("")
+            note = Note("","","","")
+            photo = Photo("","","","","")
+            imageView2.setImageResource(R.drawable.ic_launcher_background)
+        }
 
+        btnDeleteNote.setOnClickListener{
+            confirmDeleteNote()
+        }
 
         // create an OnDateSetListener
         val dateSetListener =
@@ -141,9 +158,14 @@ class HomeFragment : Fragment() {
                 txtNote.setText(note.content)
                 txtDate.setText(note.dateCreated)
                 txtNoteID.setText(note.noteId)
-
+                if(note.uri!=null && !note.uri.isEmpty()){
+                    Picasso.get().load(note.uri).into(imageView2)
+                } else {
+                    imageView2.setImageResource(R.drawable.ic_launcher_background)
+                }
                 homeViewModel.note = note
-                imageView2.setImageURI(Uri.parse(note.localUri))
+
+
 
             }
 
@@ -152,6 +174,22 @@ class HomeFragment : Fragment() {
 
     }
 
+
+     private fun confirmDeleteNote() {
+         if (note.noteId != null && !note.noteId.isEmpty()) {
+             // updating existing
+             val document = firestore.collection("notes").document(note.noteId)
+             val deleteTask = document.delete()
+                 deleteTask.addOnSuccessListener {
+                     Toast.makeText(activity!!,"You deleted a note",Toast.LENGTH_LONG).show()
+                 }
+                 deleteTask.addOnFailureListener{
+                     Toast.makeText(activity!!,"The note couldn't be deleted",Toast.LENGTH_LONG).show()
+                 }
+         } else {
+             Toast.makeText(activity!!,"You must choose a note to delete", Toast.LENGTH_LONG).show()
+         }
+    }
 
     //function that is called back on external intent
      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -170,7 +208,7 @@ class HomeFragment : Fragment() {
                      Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
                      imageView2.setImageURI(photoURI)
                      photo.localUri = photoURI.toString()
-                     note.localUri = photo.localUri
+
                  }
              }
 
@@ -191,7 +229,7 @@ class HomeFragment : Fragment() {
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
         startActivityForResult(
-            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
+            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).setIsSmartLockEnabled(false)
                 .build(), AUTH_REQUEST_CODE
         )
     }

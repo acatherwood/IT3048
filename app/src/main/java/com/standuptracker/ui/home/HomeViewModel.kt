@@ -12,6 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
 import com.standuptracker.dto.Note
 import com.standuptracker.dto.Photo
+import java.lang.Exception
+
 import kotlin.collections.ArrayList
 
 private var storageReference = FirebaseStorage.getInstance().getReference()
@@ -53,8 +55,8 @@ class HomeViewModel : ViewModel() {
                     val id = it.data?.get("noteId").toString()
                     val day: String = it.data?.get("dateCreated").toString()
                     val content = it.data?.get("content").toString()
-                    val localPhoto = it.data?.get("localUri").toString()
-                    val note = Note(content = content, dateCreated = day, noteId=id, localUri = localPhoto)
+                    val remotePhoto = it.data?.get("uri").toString()
+                    val note = Note(content = content, dateCreated = day, noteId=id, uri = remotePhoto)
                     allNotes.add(note!!)
                 }
                 _notes.value = allNotes
@@ -79,8 +81,8 @@ class HomeViewModel : ViewModel() {
                     val id = it.data?.get("noteId").toString()
                     val day: String = it.data?.get("dateCreated").toString()
                     val content = it.data?.get("content").toString()
-                    val localPhoto = it.data?.get("localUri").toString()
-                    val note = Note(content = content, dateCreated = day,noteId = id, localUri = localPhoto)
+                    val remotePhoto = it.data?.get("uri").toString()
+                    val note = Note(content = content, dateCreated = day,noteId = id, uri = remotePhoto)
                     allNotes.add(note!!)
                 }
                 _notes.value = allNotes
@@ -93,22 +95,26 @@ class HomeViewModel : ViewModel() {
         photo: Photo,
         user: FirebaseUser
     ) {
-        val document =
-            if (note.noteId != null && !note.noteId.isEmpty()) {
-                // updating existing
-                firestore.collection("notes").document(note.noteId)
-            } else {
-                // create new
-                firestore.collection("notes").document()
+        if(user!=null){
+            val document =
+                if (note.noteId != null && !note.noteId.isEmpty()) {
+                    // updating existing
+                    firestore.collection("notes").document(note.noteId)
+                } else {
+                    // create new
+                    firestore.collection("notes").document()
+                }
+            note.noteId = document.id
+            val set = document.set(note)
+            set.addOnSuccessListener {
+                Log.d("Firebase", "document saved")
+                savePhoto(note,photo,user)
             }
-        note.noteId = document.id
-        val set = document.set(note)
-        set.addOnSuccessListener {
-            Log.d("Firebase", "document saved")
-            savePhoto(note,photo,user)
-        }
-        set.addOnFailureListener {
-            Log.d("Firebase", "Save Failed")
+            set.addOnFailureListener {
+                Log.d("Firebase", "Save Failed")
+            }
+        } else {
+            throw Exception("You must login as a valid user!")
         }
     }
 
@@ -120,7 +126,7 @@ class HomeViewModel : ViewModel() {
         val collection = firestore.collection("notes")
             .document(note.noteId)
             .collection("photos")
-         val task = collection.add(photo)
+            val task = collection.add(photo)
             task.addOnSuccessListener {
                 photo.id = it.id
                 photo.description = note.content
@@ -139,7 +145,7 @@ class HomeViewModel : ViewModel() {
                 val downloadUrl = imageRef.downloadUrl
                 downloadUrl.addOnSuccessListener {
                     photo.remoteUri = it.toString()
-                    note.localUri = photo.localUri
+                    note.uri= it.toString()
                     // update our Cloud Firestore with the public image URI.
                     updatePhotoDatabase(note, photo)
                 }
@@ -156,6 +162,8 @@ class HomeViewModel : ViewModel() {
             .collection("photos")
             .document(photo.id)
             .set(photo)
+        firestore.collection("notes")
+            .document(note.noteId).set(note)
     }
 
     private val _text = MutableLiveData<String>().apply {

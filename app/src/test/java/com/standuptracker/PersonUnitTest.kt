@@ -1,6 +1,7 @@
 package com.standuptracker
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.standuptracker.dto.Note
 import com.standuptracker.ui.gallery.GalleryViewModel
 import com.standuptracker.dto.Person
 import org.junit.Assert
@@ -22,6 +23,7 @@ class PersonUnitTest {
     @Test
     fun personDTO_maintainsState() {
         var person = Person(1, "rfrith0@stanford.edu", "Female", "Frith", "Roxanna")
+
         Assert.assertTrue(person.email.equals("rfrith0@stanford.edu"))
         Assert.assertTrue(person.gender.equals("Female"))
         Assert.assertTrue(person.lastName.equals("Frith"))

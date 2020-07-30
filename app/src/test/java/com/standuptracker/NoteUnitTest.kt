@@ -24,7 +24,7 @@ class NoteUnitTest {
         assertTrue(note.noteId.equals("09xH6mv19zXr6Yo2TPxT"))
         assertTrue(note.content.equals("imageDisplayTest1"))
         assertTrue(note.dateCreated.equals("7/22/2020"))
-        assertTrue(note.localUri.equals("content://com.standuptracker.android.fileprovider/my_root_images/Pictures/StandupTracker20200727_2203505562631059751486220.jpg"))
+        assertTrue(note.uri.equals("content://com.standuptracker.android.fileprovider/my_root_images/Pictures/StandupTracker20200727_2203505562631059751486220.jpg"))
     }
     @Test
     fun noteDTO_toStringFormat() {
