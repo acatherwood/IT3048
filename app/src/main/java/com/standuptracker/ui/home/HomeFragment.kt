@@ -2,10 +2,7 @@ package com.standuptracker.ui.home
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -15,35 +12,34 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.standuptracker.R
 import com.standuptracker.dto.Note
+import com.standuptracker.dto.Photo
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import com.standuptracker.dto.Photo
-import java.io.File
 
 
 class HomeFragment : Fragment() {
     private var photo = Photo()
     private lateinit var currentPhotoPath: String
-    private val SAVE_IMAGE_REQUEST_CODE: Int = 2001    
+    private val SAVE_IMAGE_REQUEST_CODE: Int = 2001
     private val CAMERA_REQUEST_CODE: Int = 1998
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val AUTH_REQUEST_CODE = 2002
@@ -81,8 +77,14 @@ class HomeFragment : Fragment() {
             prepTakePhoto()
         }
 
-        homeViewModel.notes.observe(this, Observer {
-                notes -> spnNotes.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, notes))
+        homeViewModel.notes.observe(this, Observer { notes ->
+            spnNotes.setAdapter(
+                ArrayAdapter(
+                    context!!,
+                    R.layout.support_simple_spinner_dropdown_item,
+                    notes
+                )
+            )
         })
 
 
@@ -91,15 +93,15 @@ class HomeFragment : Fragment() {
 
         }
 
-        btnAddNote.setOnClickListener{
+        btnAddNote.setOnClickListener {
             txtNoteID.setText("")
             txtNote.setText("")
-            note = Note("","","","")
-            photo = Photo("","","","","")
+            note = Note("", "", "", "")
+            photo = Photo("", "", "", "", "")
             imageView2.setImageResource(R.drawable.ic_launcher_background)
         }
 
-        btnDeleteNote.setOnClickListener{
+        btnDeleteNote.setOnClickListener {
             confirmDeleteNote()
         }
 
@@ -117,8 +119,12 @@ class HomeFragment : Fragment() {
             override fun onClick(view: View) {
                 activity?.let {
                     DatePickerDialog(
-                        it, dateSetListener, // set DatePickerDialog to point to today's date when it loads up
-                        cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                        it,
+                        dateSetListener, // set DatePickerDialog to point to today's date when it loads up
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)
+                    ).show()
                 }
             }
         })
@@ -158,13 +164,12 @@ class HomeFragment : Fragment() {
                 txtNote.setText(note.content)
                 txtDate.setText(note.dateCreated)
                 txtNoteID.setText(note.noteId)
-                if(note.uri!=null && !note.uri.isEmpty()){
+                if (note.uri != null && !note.uri.isEmpty()) {
                     Picasso.get().load(note.uri).into(imageView2)
                 } else {
                     imageView2.setImageResource(R.drawable.ic_launcher_background)
                 }
                 homeViewModel.note = note
-
 
 
             }
@@ -175,26 +180,26 @@ class HomeFragment : Fragment() {
     }
 
 
-     private fun confirmDeleteNote() {
-         if (note.noteId != null && !note.noteId.isEmpty()) {
-             // updating existing
-             val document = firestore.collection("notes").document(note.noteId)
-             val deleteTask = document.delete()
-                 deleteTask.addOnSuccessListener {
-                     Toast.makeText(activity!!,"You deleted a note",Toast.LENGTH_LONG).show()
-                 }
-                 deleteTask.addOnFailureListener{
-                     Toast.makeText(activity!!,"The note couldn't be deleted",Toast.LENGTH_LONG).show()
-                 }
-         } else {
-             Toast.makeText(activity!!,"You must choose a note to delete", Toast.LENGTH_LONG).show()
-         }
+    private fun confirmDeleteNote() {
+        if (note.noteId != null && !note.noteId.isEmpty()) {
+            // updating existing
+            val document = firestore.collection("notes").document(note.noteId)
+            val deleteTask = document.delete()
+            deleteTask.addOnSuccessListener {
+                Toast.makeText(activity!!, "You deleted a note", Toast.LENGTH_LONG).show()
+            }
+            deleteTask.addOnFailureListener {
+                Toast.makeText(activity!!, "The note couldn't be deleted", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(activity!!, "You must choose a note to delete", Toast.LENGTH_LONG).show()
+        }
     }
 
     //function that is called back on external intent
-     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-         super.onActivityResult(requestCode, resultCode, data)
-         if (resultCode == RESULT_OK) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
 
              when(requestCode){
                  // log the user in
@@ -212,8 +217,8 @@ class HomeFragment : Fragment() {
                  }
              }
 
-         }
-     }
+        }
+    }
 
     private fun updateDateInView() {
         val myFormat = "MM/dd/yyyy" // mention the format you need
@@ -229,11 +234,11 @@ class HomeFragment : Fragment() {
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
         startActivityForResult(
-            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).setIsSmartLockEnabled(false)
+            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
                 .build(), AUTH_REQUEST_CODE
         )
     }
-
 
 
     private fun prepTakePhoto() {
@@ -252,23 +257,27 @@ class HomeFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also{
-                takePictureIntent -> takePictureIntent.resolveActivity(context!!.packageManager)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(context!!.packageManager)
             if (takePictureIntent == null) {
                 Toast.makeText(context, "Unable to save photo", Toast.LENGTH_LONG).show()
             } else {
                 // if we are here, we have a valid intent.
                 val photoFile: File = createImageFile()
                 photoFile?.also {
-                    photoURI = FileProvider.getUriForFile(activity!!.applicationContext, "com.standuptracker.android.fileprovider", it)
+                    photoURI = FileProvider.getUriForFile(
+                        activity!!.applicationContext,
+                        "com.standuptracker.android.fileprovider",
+                        it
+                    )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, SAVE_IMAGE_REQUEST_CODE)
                 }
             }
         }
     }
-    
-    private fun createImageFile() : File {
+
+    private fun createImageFile(): File {
         // genererate a unique filename with date.
         val timestamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         // get access to the directory where we can write pictures.
@@ -306,7 +315,7 @@ class HomeFragment : Fragment() {
             noteId = txtNoteID.text.toString()
 
         }
-        homeViewModel.note=note
+        homeViewModel.note = note
     }
 
     override fun onRequestPermissionsResult(
@@ -331,4 +340,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
- }
+}

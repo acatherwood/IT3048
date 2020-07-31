@@ -36,9 +36,6 @@ class HomeViewModel : ViewModel() {
      */
     private fun listenToNotes() {
 
-
-
-        /**TODO: Make listbox only populate notes from user-selected date. */
         firestore.collection("notes").addSnapshotListener {
                 snapshot, e ->
             // if there is an exception we want to skip.

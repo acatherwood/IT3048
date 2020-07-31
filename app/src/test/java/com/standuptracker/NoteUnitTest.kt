@@ -17,19 +17,19 @@ class NoteUnitTest {
     lateinit var hvm: HomeViewModel
     lateinit var hvf: HomeFragment
 
-
+    var note = Note("IkXw9I0mU7gjymTSytza", "Test Note is Best Note", "7/18/2020", "https://firebasestorage.googleapis.com/v0/b/standup-tracker-ffd2f.appspot.com/o/images%2F9Ybag9SF1LaMwWC5B3OqfIFkOYx1%2FStandupTracker20200728_2035234074515540357557551.jpg?alt=media&token=46fd5635-2d88-4378-b2e4-2261fd75078e")
     @Test
     fun confirmNote_outputsCorrectNote() {
-        var note = Note("09xH6mv19zXr6Yo2TPxT", "imageDisplayTest1", "7/22/2020", "content://com.standuptracker.android.fileprovider/my_root_images/Pictures/StandupTracker20200727_2203505562631059751486220.jpg")
-        assertTrue(note.noteId.equals("09xH6mv19zXr6Yo2TPxT"))
-        assertTrue(note.content.equals("imageDisplayTest1"))
-        assertTrue(note.dateCreated.equals("7/22/2020"))
-        assertTrue(note.uri.equals("content://com.standuptracker.android.fileprovider/my_root_images/Pictures/StandupTracker20200727_2203505562631059751486220.jpg"))
+        assertTrue(note.noteId.equals("IkXw9I0mU7gjymTSytza"))
+        assertTrue(note.content.equals("Test Note is Best Note"))
+        assertTrue(note.dateCreated.equals("7/18/2020"))
+        assertTrue(note.uri.equals("https://firebasestorage.googleapis.com/v0/b/standup-tracker-ffd2f.appspot.com/o/images%2F9Ybag9SF1LaMwWC5B3OqfIFkOYx1%2FStandupTracker20200728_2035234074515540357557551.jpg?alt=media&token=46fd5635-2d88-4378-b2e4-2261fd75078e"))
     }
+
+
     @Test
     fun noteDTO_toStringFormat() {
-        var note =  Note("09xH6mv19zXr6Yo2TPxT", "imageDisplayTest1", "7/22/2020", "content://com.standuptracker.android.fileprovider/my_root_images/Pictures/StandupTracker20200727_2203505562631059751486220.jpg")
-        assertTrue(note.toString().equals("imageDisplayTest1"))
+        assertTrue(note.toString().equals("Test Note is Best Note"))
     }
 
 }
