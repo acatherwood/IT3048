@@ -34,15 +34,16 @@ class GalleryFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-        galleryViewModel.people.observe(this, Observer { people ->
-            actPerson.setAdapter(
-                ArrayAdapter(
-                    context!!,
-                    R.layout.support_simple_spinner_dropdown_item,
-                    people
+        galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java) //create an instance of the GalleryViewModel class
+
+        galleryViewModel.people.observe(this, Observer { //set an Observer on the ArrayList of Person objects created by the Retrofit call.
+                people -> actPerson.setAdapter(
+                    ArrayAdapter(
+                        context!!,
+                        R.layout.support_simple_spinner_dropdown_item,
+                        people
+                    )
                 )
-            )
         })
 
     }
