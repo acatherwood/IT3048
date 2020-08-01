@@ -296,15 +296,23 @@ class HomeFragment : Fragment() {
     private fun saveNote() {
         //the try catch block is used to catch any error in the save() function
        try{
+           if (txtNote.text.isNullOrEmpty()){
+               Toast.makeText(context, "Note cannot be blank", Toast.LENGTH_LONG).show()
+           }else{
            storeNote()
 
            homeViewModel.save(note,photo,user) //pass the Note, Photo, and User to the save() function in HomeViewModel
 
            note = Note() //once the save() function finishes, set the fragment's note variable to an empty Note object
-
+           }
 
        }catch (t: Throwable){
-           Toast.makeText(context, "You must log in to make changes.", Toast.LENGTH_LONG).show() //the most likely failure is that the user hasn't logged in
+           print(t.message)
+           if (t.message == "lateinit property user has not been initialized"){
+               Toast.makeText(context, "You must log in to make changes", Toast.LENGTH_LONG).show() //the most likely failure is that the user hasn't logged in
+           } else {
+               Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG).show() //show stack trace error
+           }
        }
 
 
@@ -312,6 +320,7 @@ class HomeFragment : Fragment() {
 
 
     private fun storeNote() {
+
 
         note.apply {
 
@@ -322,6 +331,8 @@ class HomeFragment : Fragment() {
 
         }
         homeViewModel.note = note  //save the fragment's Note object to the note variable in the HomeViewModel
+
+
     }
 
     override fun onRequestPermissionsResult(
