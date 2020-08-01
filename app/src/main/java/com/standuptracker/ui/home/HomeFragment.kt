@@ -26,25 +26,27 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import com.standuptracker.R
 import com.standuptracker.dto.Note
+import com.standuptracker.dto.Photo
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import com.standuptracker.dto.Photo
-import java.io.File
 
 
 class HomeFragment : Fragment() {
     private var photo = Photo()
     private lateinit var currentPhotoPath: String
-    private val SAVE_IMAGE_REQUEST_CODE: Int = 2001    
+    private val SAVE_IMAGE_REQUEST_CODE: Int = 2001
     private val CAMERA_REQUEST_CODE: Int = 1998
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val AUTH_REQUEST_CODE = 2002
     private lateinit var user: FirebaseUser
     private lateinit var note: Note
     private var photoURI: Uri? = null
+    private val firestore = Firebase.firestore
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -67,24 +69,43 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //when the Logon button is clicked, the function logon() is executed
         btnLogon.setOnClickListener {
             logon()
         }
-
+        //when the Photo button is clicked, the prepTakePhoto() function is executed
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
         }
 
-        homeViewModel.notes.observe(this, Observer {
-                notes -> spnNotes.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, notes))
+        //The HomeViewModel has an arrayList of Note objects that we want to populate the spinner, so we set an Observer on it.
+        homeViewModel.notes.observe(this, Observer { notes ->
+            spnNotes.setAdapter(
+                ArrayAdapter(
+                    context!!,
+                    R.layout.support_simple_spinner_dropdown_item,
+                    notes
+                )
+            )
         })
 
+        //when the Save button is clicked, the saveNote() function is executed
         btnSave.setOnClickListener {
                 saveNote()
-
         }
 
-
+        //when the AddNote button is clicked
+        btnAddNote.setOnClickListener {
+            txtNoteID.setText("") //clear the NoteID textbox
+            txtNote.setText("") //clear the Note textbox
+            note = Note("", "", "", "") //set the note variable to an empty Note object
+            photo = Photo("", "", "", "", "") //set the photo variable to an empty Photo object
+            imageView2.setImageResource(R.drawable.ic_launcher_background) //set the ImageView to display the placeholder texture
+        }
+        //when the DeleteNote button is clicked, execute the confirmDeleteNote() function
+        btnDeleteNote.setOnClickListener {
+            confirmDeleteNote()
+        }
 
         // create an OnDateSetListener
         val dateSetListener =
@@ -92,7 +113,7 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updateDateInView()
+                updateDateInView() //update the textbox that displays the date.
             }
 
         // pop calendar open when user clicks on the date field
@@ -100,8 +121,12 @@ class HomeFragment : Fragment() {
             override fun onClick(view: View) {
                 activity?.let {
                     DatePickerDialog(
-                        it, dateSetListener, // set DatePickerDialog to point to today's date when it loads up
-                        cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                        it,
+                        dateSetListener, // set DatePickerDialog to point to today's date when it loads up
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)
+                    ).show()
                 }
             }
         })
@@ -141,9 +166,13 @@ class HomeFragment : Fragment() {
                 txtNote.setText(note.content)
                 txtDate.setText(note.dateCreated)
                 txtNoteID.setText(note.noteId)
+                if (note.uri != null && !note.uri.isEmpty()) {
+                    Picasso.get().load(note.uri).into(imageView2) //use the Picasso package to load the photo into the ImageView using the public-facing Firestore url
+                } else {
+                    imageView2.setImageResource(R.drawable.ic_launcher_background)
+                }
+                homeViewModel.note = note //set the ViewModel's note variable to the selected note from the spinner
 
-                homeViewModel.note = note
-                imageView2.setImageURI(Uri.parse(note.localUri))
 
             }
 
@@ -153,10 +182,29 @@ class HomeFragment : Fragment() {
     }
 
 
+    private fun confirmDeleteNote() {
+        if (note.noteId != null && !note.noteId.isEmpty()) {
+            // updating existing
+            val document = firestore.collection("notes").document(note.noteId) //get the documentReference in Firestore by the note's ID
+            val deleteTask = document.delete() //delete the note in Firestore
+            //when then the delete is successful, display a Toast
+            deleteTask.addOnSuccessListener {
+                Toast.makeText(activity!!, "You deleted a note", Toast.LENGTH_LONG).show()
+            }
+            //when the delete is unsuccessful, display a Toast
+            deleteTask.addOnFailureListener {
+                Toast.makeText(activity!!, "The note couldn't be deleted", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            //there was no ID in the textbox, so there was no note to delete.
+            Toast.makeText(activity!!, "You must choose a note to delete", Toast.LENGTH_LONG).show()
+        }
+    }
+
     //function that is called back on external intent
-     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-         super.onActivityResult(requestCode, resultCode, data)
-         if (resultCode == RESULT_OK) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
 
              when(requestCode){
                  // log the user in
@@ -168,20 +216,20 @@ class HomeFragment : Fragment() {
                  // allow camera access
                  SAVE_IMAGE_REQUEST_CODE -> {
                      Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
-                     imageView2.setImageURI(photoURI)
-                     photo.localUri = photoURI.toString()
-                     note.localUri = photo.localUri
+                     imageView2.setImageURI(photoURI) //display the image you just took
+                     photo.localUri = photoURI.toString() //save the local URI of the photo for use to save it into Firestore
+
                  }
              }
 
-         }
-     }
+        }
+    }
 
     private fun updateDateInView() {
         val myFormat = "MM/dd/yyyy" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         txtDate!!.text = sdf.format(cal.getTime())
-        homeViewModel.filterNotes(txtDate.text.toString())
+        homeViewModel.filterNotes(txtDate.text.toString()) //repopulate the spinner with the notes for that date.
     }
 
     private fun logon() {
@@ -192,10 +240,10 @@ class HomeFragment : Fragment() {
         )
         startActivityForResult(
             AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false) //setIsSmartLockEnabled is used to prevent a strange error that prevents users from logging in.
                 .build(), AUTH_REQUEST_CODE
         )
     }
-
 
 
     private fun prepTakePhoto() {
@@ -214,23 +262,27 @@ class HomeFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also{
-                takePictureIntent -> takePictureIntent.resolveActivity(context!!.packageManager)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(context!!.packageManager)
             if (takePictureIntent == null) {
                 Toast.makeText(context, "Unable to save photo", Toast.LENGTH_LONG).show()
             } else {
                 // if we are here, we have a valid intent.
                 val photoFile: File = createImageFile()
                 photoFile?.also {
-                    photoURI = FileProvider.getUriForFile(activity!!.applicationContext, "com.standuptracker.android.fileprovider", it)
+                    photoURI = FileProvider.getUriForFile(
+                        activity!!.applicationContext,
+                        "com.standuptracker.android.fileprovider",
+                        it
+                    )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, SAVE_IMAGE_REQUEST_CODE)
                 }
             }
         }
     }
-    
-    private fun createImageFile() : File {
+
+    private fun createImageFile(): File {
         // genererate a unique filename with date.
         val timestamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         // get access to the directory where we can write pictures.
@@ -242,16 +294,17 @@ class HomeFragment : Fragment() {
 
 
     private fun saveNote() {
+        //the try catch block is used to catch any error in the save() function
        try{
            storeNote()
 
-           homeViewModel.save(note,photo,user)
+           homeViewModel.save(note,photo,user) //pass the Note, Photo, and User to the save() function in HomeViewModel
 
-           note = Note()
+           note = Note() //once the save() function finishes, set the fragment's note variable to an empty Note object
 
 
        }catch (t: Throwable){
-           Toast.makeText(context, "You must log in to make changes.", Toast.LENGTH_LONG).show()
+           Toast.makeText(context, "You must log in to make changes.", Toast.LENGTH_LONG).show() //the most likely failure is that the user hasn't logged in
        }
 
 
@@ -268,7 +321,7 @@ class HomeFragment : Fragment() {
             noteId = txtNoteID.text.toString()
 
         }
-        homeViewModel.note=note
+        homeViewModel.note = note  //save the fragment's Note object to the note variable in the HomeViewModel
     }
 
     override fun onRequestPermissionsResult(
@@ -293,4 +346,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
- }
+}
